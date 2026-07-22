@@ -1,0 +1,10 @@
+[project]
+name = "peg-in-a-hole"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "drake",
+    "ipykernel",
+    "manipulation",
+]
