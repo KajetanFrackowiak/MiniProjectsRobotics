@@ -11,3 +11,13 @@ During placing, the robot rubs against the door and the object slips out.
 
 ## Results
 ![1](result_images/closed_doors.png) ![2](result_images/opened_doors.png)
+
+## Getting Started
+
+### Installation
+This project uses `uv` for dependency management. Clone the parent repository and navigate to the project directory:
+
+```bash
+git clone https://github.com/KajetanFrackowiak/MiniProjectsRobotics.git
+cd MiniProjectsComputerRobotics/door_opening
+uv sync
