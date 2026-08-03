@@ -19,6 +19,8 @@ jobs:
             python: "3.13"
           - project: "peg_in_a_hole"
             python: "3.13"
+          - project: "clutter_clearing"
+            python: "3.13"
 
     defaults:
       run:
