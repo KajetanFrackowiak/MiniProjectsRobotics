@@ -1,9 +1,35 @@
 [project]
-name = "clutter-clearning"
+name = "clutter-clearining"
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "numpy",
     "drake",
+    "ipykernel",
     "manipulation",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.7",
+    "pyright",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "B",
+    "UP",
+    "NPY",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

@@ -1,8 +1,7 @@
-from pydrake.systems.framework import DiagramBuilder
+from manipulation.utils import ConfigureParser
 from pydrake.multibody.parsing import Parser
 from pydrake.multibody.plant import AddMultibodyPlantSceneGraph
-
-from manipulation.utils import ConfigureParser
+from pydrake.systems.framework import DiagramBuilder
 
 
 def make_internal_model():

@@ -1,13 +1,16 @@
 from copy import copy
 from enum import Enum
+
 import numpy as np
-
-from pydrake.math import RigidTransform, RollPitchYaw
-from pydrake.systems.framework import LeafSystem, InputPortIndex
-from pydrake.trajectories import PiecewisePolynomial, PiecewisePose
+from manipulation.pick import (
+    MakeGripperCommandTrajectory,
+    MakeGripperFrames,
+    MakeGripperPoseTrajectory,
+)
 from pydrake.common.value import AbstractValue
-
-from manipulation.pick import MakeGripperFrames, MakeGripperPoseTrajectory, MakeGripperCommandTrajectory
+from pydrake.math import RigidTransform, RollPitchYaw
+from pydrake.systems.framework import InputPortIndex, LeafSystem
+from pydrake.trajectories import PiecewisePolynomial, PiecewisePose
 
 
 class PlannerState(Enum):
@@ -31,9 +34,7 @@ class Planner(LeafSystem):
         self._y_bin_grasp_index = self.DeclareAbstractInputPort(
             "y_bin_grasp", AbstractValue.Make((np.inf, RigidTransform()))
         ).get_index()
-        self._wsg_state_index = self.DeclareVectorInputPort(
-            "wsg_state", 2
-        ).get_index()
+        self._wsg_state_index = self.DeclareVectorInputPort("wsg_state", 2).get_index()
 
         self._mode_index = self.DeclareAbstractState(
             AbstractValue.Make(PlannerState.WAIT_FOR_OBJECTS_TO_SETTLE)
@@ -105,7 +106,9 @@ class Planner(LeafSystem):
                     int(self._attempts_index)
                 ).get_mutable_value()
                 if attempts[0] > 5:
-                    print("Switching to the other bin after 5 consecutive failed attempts")
+                    print(
+                        "Switching to the other bin after 5 consecutive failed attempts"
+                    )
                     attempts[0] = 0
                     if mode == PlannerState.PICKING_FROM_X_BIN:
                         state.get_mutable_abstract_state(
@@ -123,7 +126,9 @@ class Planner(LeafSystem):
                     PlannerState.WAIT_FOR_OBJECTS_TO_SETTLE
                 )
                 times = {"initial": current_time}
-                state.get_mutable_abstract_state(int(self._times_index)).set_value(times)
+                state.get_mutable_abstract_state(int(self._times_index)).set_value(
+                    times
+                )
                 X_G = self.get_input_port(0).Eval(context)[
                     int(self._gripper_body_index)
                 ]
@@ -163,9 +168,7 @@ class Planner(LeafSystem):
         state.get_mutable_abstract_state(int(self._traj_q_index)).set_value(q_traj)
 
     def Plan(self, context, state):
-        mode = copy(
-            state.get_mutable_abstract_state(int(self._mode_index)).get_value()
-        )
+        mode = copy(state.get_mutable_abstract_state(int(self._mode_index)).get_value())
 
         X_G = {
             "initial": self.get_input_port(0).Eval(context)[
@@ -174,17 +177,17 @@ class Planner(LeafSystem):
         }
 
         cost = np.inf
-        for i in range(5):
+        for _ in range(5):
             if mode == PlannerState.PICKING_FROM_Y_BIN:
-                cost, X_G["pick"] = self.get_input_port(
-                    self._y_bin_grasp_index
-                ).Eval(context)
+                cost, X_G["pick"] = self.get_input_port(self._y_bin_grasp_index).Eval(
+                    context
+                )
                 if np.isinf(cost):
                     mode = PlannerState.PICKING_FROM_X_BIN
             else:
-                cost, X_G["pick"] = self.get_input_port(
-                    self._x_bin_grasp_index
-                ).Eval(context)
+                cost, X_G["pick"] = self.get_input_port(self._x_bin_grasp_index).Eval(
+                    context
+                )
                 if np.isinf(cost):
                     mode = PlannerState.PICKING_FROM_Y_BIN
                 else:
@@ -193,9 +196,9 @@ class Planner(LeafSystem):
             if not np.isinf(cost):
                 break
 
-        assert not np.isinf(
-            cost
-        ), "Could not find a valid grasp in either bin after 5 attempts"
+        assert not np.isinf(cost), (
+            "Could not find a valid grasp in either bin after 5 attempts"
+        )
         state.get_mutable_abstract_state(int(self._mode_index)).set_value(mode)
 
         if mode == PlannerState.PICKING_FROM_X_BIN:
@@ -211,7 +214,8 @@ class Planner(LeafSystem):
 
         X_G, times = MakeGripperFrames(X_G, t0=context.get_time())
         print(
-            f"Planned {times['postplace'] - times['initial']} second trajectory in mode {mode} at time {context.get_time()}."
+            f"Planned {times['postplace'] - times['initial']} second trajectory in "
+            f"mode {mode} at time {context.get_time()}."
         )
         state.get_mutable_abstract_state(int(self._times_index)).set_value(times)
 
