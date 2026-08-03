@@ -10,4 +10,4 @@ During placing, the robot rubs against the door and the object slips out.
 - `uv run python src/main.py --run-teleop-ik` — teleop IK
 
 ## Results
-![1](photos/1.png) ![2](photos/2.png)
+![1](result_images/closed_doors.png) ![2](result_images/opened_doors.png)

@@ -2,19 +2,13 @@ import numpy as np
 from pydrake.math import RigidTransform, RotationMatrix
 from pydrake.multibody.inverse_kinematics import InverseKinematics
 from pydrake.solvers import Solve
+
 from controllers.iiwa_controller import CreateIiwaPlant
+
 
 def create_q_knots(
     pose_lst: list[RigidTransform], t_lst: np.ndarray | None = None
 ) -> np.ndarray:
-    """Convert end-effector pose list to joint position list using series of
-    InverseKinematics problems. Note that q is 9-dimensional because the last 2 dimensions
-    contain gripper joints, but these should not matter to the constraints.
-    @param: pose_lst list[RigidTransform]: post_lst[i] contains keyframe X_WG at index i.
-    @param: t_lst: optional times of the keyframes; used to keep the forearm above the
-        open right-door panel during the left-door entry window.
-    @return: q_knots np.ndarray: q_knots[i] contains IK solution that will give f(q_knots[i]) \approx pose_lst[i].
-    """
     q_knots = []
     plant, _ = CreateIiwaPlant()
     world_frame = plant.world_frame()
@@ -34,7 +28,6 @@ def create_q_knots(
         q_variables = ik.q()  # Get variables for MathematicalProgram
         prog = ik.prog()  # Get MathematicalProgram
 
-        ### TODO: Add your constraints, cost, and initial guess here ###
         X_WG = pose_lst[i]
         p_WG = X_WG.translation()
         R_WG = X_WG.rotation()
@@ -55,11 +48,14 @@ def create_q_knots(
             prog.SetInitialGuess(q_variables, q_nominal)
         else:
             prog.SetInitialGuess(q_variables, q_knots[-1])
-        
+
         # 2. Position constraint: gripper origin in world within +- 1mm
         ik.AddPositionConstraint(
             frameB=gripper_frame,
-            p_BQ=np.zeros(3), # Q is the origin of the gripper frame, p_BQ is a vector from the gripper frame to the point we want to constrain (the origin in this case).
+            p_BQ=np.zeros(
+                3
+            ),  # Q is the origin of the gripper frame, p_BQ is a vector from the
+            # gripper frame to the point we want to constrain (the origin in this case).
             frameA=world_frame,
             p_AQ_lower=p_WG - pos_tol,
             p_AQ_upper=p_WG + pos_tol,
@@ -68,16 +64,14 @@ def create_q_knots(
         # 3. Orientation constraint: gripper orientation in world within +- 0.01*pi rad.
         ik.AddOrientationConstraint(
             frameAbar=gripper_frame,
-            R_AbarA=RotationMatrix.Identity(), # A = gripper
+            R_AbarA=RotationMatrix.Identity(),  # A = gripper
             frameBbar=world_frame,
-            R_BbarB=R_WG, # desired orientation of gripper in world
+            R_BbarB=R_WG,  # desired orientation of gripper in world
             theta_bound=ori_tol,
         )
 
         # 4. Joint-centering cost to help guide the solver towards good solutions.
         prog.AddQuadraticErrorCost(W, q_nominal, q_variables)
-        
-        ################################################
 
         result = Solve(prog)
 

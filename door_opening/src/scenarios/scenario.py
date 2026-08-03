@@ -1,18 +1,20 @@
 from manipulation.station import LoadScenario, Scenario
 
 from utils.asset_paths import (
+    AMAZON_TABLE_SIMPLIFIED_URI,
+    CAMERA_BOX_URI,
+    CUPBOARD_URI,
     IIWA_SDF_7_NO_COLLISION_URI,
     IIWA_SDF_7_WITH_BOX_COLLISION_URI,
     SCHUNK_WSG_50_TIP_URI,
-    AMAZON_TABLE_SIMPLIFIED_URI,
-    CUPBOARD_URI,
-    CAMERA_BOX_URI,
     SUGAR_BOX_URI,
 )
+
 
 def load_iiwa_scenario(iiwa_collision: bool = False) -> Scenario:
     """Load the iiwa scenario YAML into a typed Scenario object."""
     return LoadScenario(data=make_iiwa_scenario(iiwa_collision=iiwa_collision))
+
 
 def make_iiwa_scenario(iiwa_collision: bool = False) -> str:
     if iiwa_collision:

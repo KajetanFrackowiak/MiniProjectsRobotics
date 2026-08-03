@@ -1,23 +1,22 @@
 import time
 
 import numpy as np
-from pydrake.systems.framework import DiagramBuilder
-from pydrake.systems.analysis import Simulator
-from pydrake.systems.primitives import ConstantVectorSource, MatrixGain, Multiplexer
+from manipulation.scenarios import AddMultibodyTriad
+from manipulation.station import MakeHardwareStation
 from pydrake.math import RigidTransform
 from pydrake.multibody.inverse_kinematics import (
     DifferentialInverseKinematicsIntegrator,
     DifferentialInverseKinematicsParameters,
 )
+from pydrake.systems.analysis import Simulator
+from pydrake.systems.framework import DiagramBuilder
+from pydrake.systems.primitives import ConstantVectorSource, MatrixGain
 from pydrake.visualization import MeshcatPoseSliders
 
-
-from manipulation.scenarios import AddMultibodyTriad
-from manipulation.station import MakeHardwareStation
-
-from scenarios.scenario import load_iiwa_scenario
 from controllers.iiwa_controller import CreateIiwaPlant
+from scenarios.scenario import load_iiwa_scenario
 from utils.visualize import make_diagram
+
 
 def setup_manipulation_station(meshcat) -> RigidTransform:
     builder = DiagramBuilder()
@@ -27,7 +26,9 @@ def setup_manipulation_station(meshcat) -> RigidTransform:
     scene_graph = station.GetSubsystemByName("scene_graph")
     AddMultibodyTriad(plant.GetFrameByName("body"), scene_graph)
 
-    iiwa_position = builder.AddSystem(ConstantVectorSource(np.array([0.0, 0.6, 0.0, -1.75, 0.0, 1.0, 0.0])))
+    iiwa_position = builder.AddSystem(
+        ConstantVectorSource(np.array([0.0, 0.6, 0.0, -1.75, 0.0, 1.0, 0.0]))
+    )
     builder.Connect(
         iiwa_position.get_output_port(), station.GetInputPort("iiwa.position")
     )
@@ -50,6 +51,7 @@ def setup_manipulation_station(meshcat) -> RigidTransform:
     simulator.AdvanceTo(5.0)
 
     return initial_pose
+
 
 def teleop_inverse_kinematics(meshcat):
     builder = DiagramBuilder()
@@ -95,9 +97,7 @@ def teleop_inverse_kinematics(meshcat):
         differential_ik.GetOutputPort("joint_positions"),
         q_selector.get_input_port(),
     )
-    builder.Connect(
-        q_selector.get_output_port(), station.GetInputPort("iiwa.position")
-    )
+    builder.Connect(q_selector.get_output_port(), station.GetInputPort("iiwa.position"))
 
     wsg_position = builder.AddSystem(ConstantVectorSource([0.0]))
     builder.Connect(
@@ -148,9 +148,7 @@ def teleop_inverse_kinematics(meshcat):
                 last_open_clicks = open_clicks
                 q_wsg = min(0.055, q_wsg + finger_step)
                 print(f"finger position: {q_wsg:.4f}")
-            wsg_position.get_mutable_source_value(wsg_source_context).set_value(
-                [q_wsg]
-            )
+            wsg_position.get_mutable_source_value(wsg_source_context).set_value([q_wsg])
             t += dt
             simulator.AdvanceTo(t)
             time.sleep(dt)
@@ -158,4 +156,3 @@ def teleop_inverse_kinematics(meshcat):
         meshcat.DeleteButton("Close Gripper")
         meshcat.DeleteButton("Open Gripper")
         meshcat.DeleteButton("Stop Teleop")
-

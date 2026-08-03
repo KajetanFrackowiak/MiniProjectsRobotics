@@ -1,6 +1,7 @@
-from pydrake.multibody.plant import MultibodyPlant
 from manipulation.station import LoadScenario, MakeMultibodyPlant
 from manipulation.utils import FindResource
+from pydrake.multibody.plant import MultibodyPlant
+
 
 def CreateIiwaPlant() -> tuple[MultibodyPlant, list[int]]:
     """creates plant that includes only the robot and gripper, used for controllers."""
