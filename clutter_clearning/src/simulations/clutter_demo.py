@@ -1,15 +1,18 @@
 import numpy as np
-
-from pydrake.common import RandomGenerator
-from pydrake.math import UniformlyRandomRotationMatrix, RigidTransform
-from pydrake.systems.framework import DiagramBuilder
-from pydrake.systems.primitives import PortSwitch
-from pydrake.systems.analysis import Simulator
-
 from manipulation import FindResource
 from manipulation.meshcat_utils import StopButton
 from manipulation.scenarios import AddIiwaDifferentialIK, ycb
-from manipulation.station import AddPointClouds, AppendDirectives, LoadScenario, MakeHardwareStation
+from manipulation.station import (
+    AddPointClouds,
+    AppendDirectives,
+    LoadScenario,
+    MakeHardwareStation,
+)
+from pydrake.common import RandomGenerator
+from pydrake.math import RigidTransform, UniformlyRandomRotationMatrix
+from pydrake.systems.analysis import Simulator
+from pydrake.systems.framework import DiagramBuilder
+from pydrake.systems.primitives import PortSwitch
 
 from perception.grasp_selector import GraspSelector
 from planning.state_machine import Planner

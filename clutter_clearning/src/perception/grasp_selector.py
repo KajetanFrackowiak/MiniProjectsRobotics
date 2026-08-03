@@ -1,11 +1,9 @@
 import numpy as np
-
-from pydrake.math import RigidTransform, RollPitchYaw
-from pydrake.perception import PointCloud, Concatenate
-from pydrake.common.value import AbstractValue
-from pydrake.systems.framework import LeafSystem
-
 from manipulation.clutter import GenerateAntipodalGraspCandidate
+from pydrake.common.value import AbstractValue
+from pydrake.math import RigidTransform, RollPitchYaw
+from pydrake.perception import Concatenate, PointCloud
+from pydrake.systems.framework import LeafSystem
 
 from models.internal_model import make_internal_model
 
@@ -60,7 +58,7 @@ class GraspSelector(LeafSystem):
 
         costs = []
         X_Gs = []
-        for i in range(100):
+        for _ in range(100):
             cost, X_G = GenerateAntipodalGraspCandidate(
                 self._internal_model,
                 self._internal_model_context,
