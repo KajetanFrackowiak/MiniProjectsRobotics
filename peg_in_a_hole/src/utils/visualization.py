@@ -1,11 +1,11 @@
-
+from manipulation.scenarios import AddMultibodyTriad, SetColor
+from pydrake.geometry import MeshcatVisualizer, MeshcatVisualizerParams, SceneGraph
+from pydrake.multibody.plant import MultibodyPlant
 from pydrake.systems.framework import DiagramBuilder, OutputPort
 from pydrake.systems.rendering import MultibodyPositionToGeometryPose
-from pydrake.multibody.plant import MultibodyPlant
-from pydrake.geometry import SceneGraph, MeshcatVisualizer, MeshcatVisualizerParams
-from manipulation.scenarios import AddMultibodyTriad, SetColor
 
 from utils.peg_geometry import add_planar_peg_to_plant
+
 
 def add_setpoint_visualization(
     builder: DiagramBuilder,
@@ -42,4 +42,3 @@ def add_setpoint_visualization(
         controller_scene_graph.get_source_pose_port(controller_plant.get_source_id()),
     )
     builder.Connect(pos_traj_port, positions_to_poses.get_input_port())
-

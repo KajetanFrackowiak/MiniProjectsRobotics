@@ -1,21 +1,25 @@
 import os
-import numpy as np
-from typing import Callable, Literal
+from collections.abc import Callable
+from typing import Literal
 
-from pydrake.systems.framework import DiagramBuilder
-from pydrake.systems.analysis import Simulator
-from pydrake.systems.primitives import TrajectorySource
+import numpy as np
+from manipulation.scenarios import AddMultibodyTriad
 from pydrake.geometry import MeshcatVisualizer
 from pydrake.multibody.meshcat import ContactVisualizer, ContactVisualizerParams
 from pydrake.multibody.plant import AddMultibodyPlantSceneGraph
+from pydrake.systems.analysis import Simulator
+from pydrake.systems.framework import DiagramBuilder
+from pydrake.systems.primitives import TrajectorySource
 
-from manipulation.scenarios import AddMultibodyTriad
-
-from utils.trajectory import get_peg_frame_offset
-from utils.visualization import add_setpoint_visualization
-from utils.peg_geometry import add_planar_peg_to_plant, add_table_to_plant, add_planar_hole_to_plant
-from utils.trajectory import get_peg_insertion_trajectory
 from controllers.stiffness import StiffnessController
+from utils.peg_geometry import (
+    add_planar_hole_to_plant,
+    add_planar_peg_to_plant,
+    add_table_to_plant,
+)
+from utils.trajectory import get_peg_frame_offset, get_peg_insertion_trajectory
+from utils.visualization import add_setpoint_visualization
+
 
 def run_planar_peg_simulation(
     k_p: np.ndarray,
@@ -30,9 +34,9 @@ def run_planar_peg_simulation(
     # Set up the scene for the planar floating peg.
     builder = DiagramBuilder()
     plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=0.005)
-    peg = add_planar_peg_to_plant(plant, peg_frame_offset=peg_frame_offset)
+    _peg = add_planar_peg_to_plant(plant, peg_frame_offset=peg_frame_offset)
     table = add_table_to_plant(plant)
-    hole = add_planar_hole_to_plant(plant, table)
+    _hole = add_planar_hole_to_plant(plant, table)
     plant.Finalize()
 
     # Visualize the peg tip
@@ -75,7 +79,6 @@ def run_planar_peg_simulation(
     plant_context = plant.GetMyContextFromRoot(context)
 
     plant.SetPositions(plant_context, start_pos)
-
 
     simulator.set_target_realtime_rate(1.0)
     meshcat.StartRecording()
