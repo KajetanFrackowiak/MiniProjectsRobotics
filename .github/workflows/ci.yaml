@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  quality:
+    name: Lint ${{ matrix.project }} (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+  
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: "door_opening"
+            python: "3.13"
+          - project: "peg_in_a_hole"
+            python: "3.13"
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    
+    steps:
+      - uses: actions/checkout@v4 
+    
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python }}
+          install-python: true
+          enable-cache: true
+      
+      - name: Install dependencies
+        run: uv sync --frozen
+      
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Lint with Ruff
+        run: uv run ruff check .
+
+      - name: Type check with Pyright
+        run: uv run pyright
