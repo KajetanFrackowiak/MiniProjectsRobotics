@@ -6,7 +6,8 @@ Robot Kuka IIWA and planar manipulator insert a peg into a hole using impedance 
 - `uv run python src/main.py --sim iiwa` — run Kuka IIWA peg in a hole
 
 ## Results
-![1](result_images/planar.png) ![2](result_images/iiwa.png)
+![1](result_images/planar.png)
+![2](result_images/iiwa.png)
 
 ## Getting Started
 
