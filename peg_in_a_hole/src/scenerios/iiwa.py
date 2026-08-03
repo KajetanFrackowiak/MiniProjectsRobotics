@@ -1,13 +1,12 @@
-from pathlib import Path
 from typing import Literal
-from utils.trajectory import get_peg_frame_offset
-from utils.assets import (
-    PEG_URDF_PATH,
-    IIWA_URDF_PATH,
-    TABLE_SDF_PATH,
-    HOLE_SDF_PATH,
-)
 
+from utils.assets import (
+    HOLE_SDF_PATH,
+    IIWA_URDF_PATH,
+    PEG_URDF_PATH,
+    TABLE_SDF_PATH,
+)
+from utils.trajectory import get_peg_frame_offset
 
 IIWA_URDF_URI = f"file://{IIWA_URDF_PATH}"
 TABLE_SDF_URI = f"file://{TABLE_SDF_PATH}"
@@ -63,7 +62,7 @@ directives:
       translation: [0, 0, {peg_frame_offset}]
       rotation: !Rpy {{ deg: [0, 0, 0] }}
 - add_model:
-    name: hole 
+    name: hole
     file: {HOLE_SDF_URI}
 - add_weld:
     parent: work_table::link
@@ -78,4 +77,3 @@ model_drivers:
       hand_model_name: wsg
   """
     return scenario_string
-    

@@ -1,10 +1,10 @@
+from typing import Literal
 
 import numpy as np
-from typing import Literal
 from pydrake.trajectories import PiecewisePolynomial
 
-
 PEG_LENGTH = 0.2  # meters
+
 
 def get_peg_insertion_trajectory(
     nominal_pos_xz: np.ndarray,
@@ -17,7 +17,8 @@ def get_peg_insertion_trajectory(
     pos_initial = np.array(
         [x_nom, z_nom + peg_frame_offset, 0.0]
     )  # (pos_x, pos_z, pitch)
-    pert = np.random.uniform(
+    rng = np.random.default_rng()
+    pert = rng.uniform(
         [-trans_pert, -trans_pert, -rot_pert], [trans_pert, trans_pert, rot_pert]
     )
     start_pos = pos_initial + pert
@@ -39,6 +40,3 @@ def get_peg_frame_offset(placement: Literal["back", "center", "tip"]) -> float:
     else:  # tip
         OFFSET = PEG_LENGTH / 4  # Place the frame a bit ahead of the peg tip
         return -PEG_LENGTH / 2 - OFFSET
-
-
-        

@@ -1,10 +1,11 @@
 import argparse
-import numpy as np
 
+import numpy as np
 from pydrake.geometry import StartMeshcat
 
-from simulations.planar_peg import run_planar_peg_simulation
 from simulations.iiwa_peg import run_iiwa_peg_simulation
+from simulations.planar_peg import run_planar_peg_simulation
+
 
 def main():
     parser = argparse.ArgumentParser(description="Run peg-in-hole simulations.")
@@ -25,14 +26,10 @@ def main():
     if args.sim == "planar":
         k_p = k_p * 0.1
         k_d = k_d * 0.1
-        run_planar_peg_simulation(
-            k_p, k_d, meshcat, peg_frame_placement="center"
-        )
+        run_planar_peg_simulation(k_p, k_d, meshcat, peg_frame_placement="center")
     elif args.sim == "iiwa":
-        
-        run_iiwa_peg_simulation(
-            k_p, k_d, meshcat, peg_frame_placement="center"
-        )
+        run_iiwa_peg_simulation(k_p, k_d, meshcat, peg_frame_placement="center")
+
 
 if __name__ == "__main__":
     main()
