@@ -11,7 +11,7 @@ from manipulation.station import MakeHardwareStation
 from scenarios.scenario import load_iiwa_scenario
 from utils.visualize import make_diagram
 
-def BuildAndSimulateTrajectory(
+def build_and_simulate_trajectory(
     meshcat, q_traj: Trajectory, g_traj: Trajectory, duration: float = 0.01, diagram_name: str = "iiwa_diagram"
 ) -> tuple[Simulator, MultibodyPlant]:
     """Simulate trajectory for manipulation station.

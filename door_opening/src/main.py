@@ -2,9 +2,9 @@ import argparse
 import numpy as np
 from pydrake.geometry import StartMeshcat
 from pydrake.trajectories import PiecewisePolynomial
-from tests.traj import add_poses
-from solvers.solver import create_q_knots
-from trajectories.simulate_traj import BuildAndSimulateTrajectory
+from trajectories.keyframes import add_poses
+from ik.ik import create_q_knots
+from trajectories.simulate_trajectory import build_and_simulate_trajectory
 from stations.station import teleop_inverse_kinematics
 
 def main():
@@ -60,7 +60,7 @@ def main():
         g_traj = PiecewisePolynomial.FirstOrderHold(gripper_t_lst, gripper_knots)
 
 
-        simulator, station_plant = BuildAndSimulateTrajectory(meshcat, q_traj, g_traj, 55.0)
+        simulator, station_plant = build_and_simulate_trajectory(meshcat, q_traj, g_traj, 55.0)
 
 if __name__ == "__main__":
     main()

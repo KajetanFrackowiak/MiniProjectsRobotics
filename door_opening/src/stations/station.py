@@ -16,7 +16,7 @@ from manipulation.scenarios import AddMultibodyTriad
 from manipulation.station import MakeHardwareStation
 
 from scenarios.scenario import load_iiwa_scenario
-from controllers.iiwa_controller import CreateIiwaControllerPlant
+from controllers.iiwa_controller import CreateIiwaPlant
 from utils.visualize import make_diagram
 
 def setup_manipulation_station(meshcat) -> RigidTransform:
@@ -59,7 +59,7 @@ def teleop_inverse_kinematics(meshcat):
     scene_graph = station.GetSubsystemByName("scene_graph")
     AddMultibodyTriad(plant.GetFrameByName("body"), scene_graph)
 
-    plant_ctl, _ = CreateIiwaControllerPlant()
+    plant_ctl, _ = CreateIiwaPlant()
     params = DifferentialInverseKinematicsParameters(
         plant_ctl.num_positions(), plant_ctl.num_velocities()
     )

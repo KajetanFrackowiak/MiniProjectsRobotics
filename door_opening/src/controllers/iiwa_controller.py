@@ -2,7 +2,7 @@ from pydrake.multibody.plant import MultibodyPlant
 from manipulation.station import LoadScenario, MakeMultibodyPlant
 from manipulation.utils import FindResource
 
-def CreateIiwaControllerPlant() -> tuple[MultibodyPlant, list[int]]:
+def CreateIiwaPlant() -> tuple[MultibodyPlant, list[int]]:
     """creates plant that includes only the robot and gripper, used for controllers."""
     scenario = LoadScenario(filename=FindResource("models/cupboard.scenario.yaml"))
     plant_robot = MakeMultibodyPlant(

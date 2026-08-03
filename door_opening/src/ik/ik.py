@@ -2,7 +2,7 @@ import numpy as np
 from pydrake.math import RigidTransform, RotationMatrix
 from pydrake.multibody.inverse_kinematics import InverseKinematics
 from pydrake.solvers import Solve
-from controllers.iiwa_controller import CreateIiwaControllerPlant
+from controllers.iiwa_controller import CreateIiwaPlant
 
 def create_q_knots(
     pose_lst: list[RigidTransform], t_lst: np.ndarray | None = None
@@ -16,7 +16,7 @@ def create_q_knots(
     @return: q_knots np.ndarray: q_knots[i] contains IK solution that will give f(q_knots[i]) \approx pose_lst[i].
     """
     q_knots = []
-    plant, _ = CreateIiwaControllerPlant()
+    plant, _ = CreateIiwaPlant()
     world_frame = plant.world_frame()
     gripper_frame = plant.GetFrameByName("body")
     forearm_frame = plant.GetBodyByName("iiwa_link_5").body_frame()
