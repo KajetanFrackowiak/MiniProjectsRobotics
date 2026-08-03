@@ -1,0 +1,11 @@
+[project]
+name = "door-opening"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "drake",
+    "manipulation",
+    "graphviz",
+    "mcubes",
+]
