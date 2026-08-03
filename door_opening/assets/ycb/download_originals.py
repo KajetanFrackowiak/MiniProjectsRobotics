@@ -40,9 +40,9 @@ which can be used in conjunction with DOPE:
 https://github.com/NVlabs/Deep_Object_Pose
 """
 
-from os.path import abspath, basename, dirname, isfile, join, splitext
 import sys
 import tarfile
+from os.path import abspath, basename, dirname, isfile, join, splitext
 from urllib.request import urlretrieve
 
 OBJECT_NAMES = [
@@ -61,7 +61,7 @@ URL_FORMAT = "http://ycb-benchmarks.s3-website-us-east-1.amazonaws.com/data/goog
 def replace_text(filename, old, new):
     with open(filename) as f:
         text = f.read()
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         f.write(text.replace(old, new))
 
 
@@ -78,7 +78,7 @@ def main():
         "{object_name}/google_16k/textured.mtl",
     ]
 
-    ycb_dir= dirname(abspath(__file__))
+    ycb_dir = dirname(abspath(__file__))
     mesh_dir = join(ycb_dir, "meshes")
 
     # Download each object, and reformat path.
@@ -86,30 +86,29 @@ def main():
         print(object_name)
         url = URL_FORMAT.format(object_name=object_name)
         desired_files = [
-            x.format(object_name=object_name) for x in desired_files_format]
+            x.format(object_name=object_name) for x in desired_files_format
+        ]
         tmp_file = join("/tmp/", basename(url))
         if not isfile(tmp_file):
             print(" - Download")
             urlretrieve(url, tmp_file)
         rename_map = {}  # {old: new}
-        with tarfile.open(tmp_file, mode='r') as tar:
+        with tarfile.open(tmp_file, mode="r") as tar:
             members = []
             for member in tar.getmembers():
                 old_name = member.name
                 if old_name in desired_files:
                     # Rename.
                     _, ext = splitext(old_name)
-                    member.name = "{}_textured{}".format(object_name, ext)
+                    member.name = f"{object_name}_textured{ext}"
                     rename_map[old_name] = member.name
-                    print(" - Extract: {}".format(member.name))
+                    print(f" - Extract: {member.name}")
                     members.append(member)
             tar.extractall(path=mesh_dir, members=members)
         assert all([x in rename_map for x in desired_files])
         # Make adjustments to MTL and OBJ files.
         if modify:
-            png_file, obj_file, mtl_file = [
-                rename_map[x] for x in desired_files]
-            mtl_path = join(mesh_dir, mtl_file)
+            png_file, obj_file, mtl_file = [rename_map[x] for x in desired_files]
             replace_text(join(mesh_dir, mtl_file), "texture_map.png", png_file)
             replace_text(join(mesh_dir, obj_file), "textured.mtl", mtl_file)
 

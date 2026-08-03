@@ -1,20 +1,21 @@
-import numpy as np
+from manipulation.meshcat_utils import AddMeshcatTriad
 from pydrake.math import RigidTransform, RotationMatrix
+
 from stations.station import setup_manipulation_station
 from trajectories.trajectory import (
     interpolate_pose,
-    make_entry_orientation_trajectory,
-    make_entry_position_trajectory,
-    make_retract_right_position_trajectory,
-    make_retract_right_orientation_trajectory,
     make_entry_left_orientation_trajectory,
     make_entry_left_position_trajectory,
-    make_retract_left_position_trajectory,
-    make_retract_left_orientation_trajectory,
-    make_pick_position_trajectory,
+    make_entry_orientation_trajectory,
+    make_entry_position_trajectory,
     make_pick_orientation_trajectory,
+    make_pick_position_trajectory,
+    make_retract_left_orientation_trajectory,
+    make_retract_left_position_trajectory,
+    make_retract_right_orientation_trajectory,
+    make_retract_right_position_trajectory,
 )
-from manipulation.meshcat_utils import AddMeshcatTriad
+
 
 def add_poses(meshcat, t_lst, show_triads=True):
     initial_pose = setup_manipulation_station(meshcat)
@@ -37,7 +38,6 @@ def add_poses(meshcat, t_lst, show_triads=True):
 
     pick_rot = make_pick_orientation_trajectory()
     pick_pos = make_pick_position_trajectory()
-
 
     pose_lst = []
     for t in t_lst:

@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from graphviz import Source
+
 
 def make_diagram(diagram, name="iiwa_diagram"):
     src_dir = Path(__file__).resolve().parent.parent

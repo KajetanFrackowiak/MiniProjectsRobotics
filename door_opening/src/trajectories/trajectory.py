@@ -1,6 +1,6 @@
 import numpy as np
 from pydrake.math import RigidTransform, RollPitchYaw, RotationMatrix
-from pydrake.trajectories import PiecewiseQuaternionSlerp, PiecewisePolynomial
+from pydrake.trajectories import PiecewisePolynomial, PiecewiseQuaternionSlerp
 
 # ---------------------------------------------------------------------------
 # Door geometry.
@@ -19,7 +19,9 @@ p_Whinge_R = p_Wdoor_R + p_hinge_R  # hinge position in the world frame
 p_hinge_to_handle_R = p_handle_R - p_hinge_R
 r_hinge_R = np.linalg.norm(p_hinge_to_handle_R)  # distance between hinge and handle
 theta_start_R = np.arctan2(p_hinge_to_handle_R[1], p_hinge_to_handle_R[0])
-angle_end_R = np.radians(173)  # 180 deg saturates iiwa_joint_6; use 120-160 deg for the easy version
+angle_end_R = np.radians(
+    173
+)  # 180 deg saturates iiwa_joint_6; use 120-160 deg for the easy version
 
 p_Wdoor_L = np.array([0.7477, 0.1445, 0.4148])  # center of the left door
 p_handle_L = np.array([-0.033, -0.1245, 0])  # handle offset from the door center
@@ -83,6 +85,7 @@ def interpolate_open_left_pose(t: float) -> RigidTransform:
     # +pi yaw: grab the handle from the front.
     return _open_door_pose(t, p_Whinge_L, r_hinge_L, theta_start_L, angle_end_L, np.pi)
 
+
 # ---------------------------------------------------------------------------
 # Phase 1: entry - approach the right-door handle.
 # ---------------------------------------------------------------------------
@@ -101,15 +104,18 @@ def make_entry_orientation_trajectory(start_pose) -> PiecewiseQuaternionSlerp:
 def make_entry_position_trajectory(start_pose) -> PiecewisePolynomial:
     p_start = start_pose.translation()
     p_handle = interpolate_open_pose(0.0).translation()
-    p_mid = np.array([
-        (p_start[0] + p_handle[0]) / 2.0,
-        (p_start[1] + p_handle[1]) / 2.0,
-        0.5,
-    ])
+    p_mid = np.array(
+        [
+            (p_start[0] + p_handle[0]) / 2.0,
+            (p_start[1] + p_handle[1]) / 2.0,
+            0.5,
+        ]
+    )
     return PiecewisePolynomial.FirstOrderHold(
         [0.0, 2.5, 5.0],
         np.column_stack([p_start, p_mid, p_handle]),
     )
+
 
 # ---------------------------------------------------------------------------
 # Phase 2: retract from the right door.
@@ -144,6 +150,7 @@ def make_retract_right_orientation_trajectory() -> PiecewiseQuaternionSlerp:
     traj.Append(10.0, R)
     return traj
 
+
 # ---------------------------------------------------------------------------
 # Phase 3: entry to the left-door handle.
 # ---------------------------------------------------------------------------
@@ -168,6 +175,7 @@ def make_entry_left_position_trajectory(start_pose) -> PiecewisePolynomial:
         [0.0, 3.0, 4.0, 5.0],
         np.column_stack([p_start, p_mid, p_mid, p_handle]),
     )
+
 
 # ---------------------------------------------------------------------------
 # Phase 4: retract from the left door (ends above the sugar box).
@@ -196,6 +204,7 @@ def make_retract_left_orientation_trajectory() -> PiecewiseQuaternionSlerp:
     traj.Append(6.0, R)
     return traj
 
+
 # ---------------------------------------------------------------------------
 # Phase 5: pick the sugar box, place it on the shelf, and return.
 # ---------------------------------------------------------------------------
@@ -210,7 +219,19 @@ def make_pick_position_trajectory() -> PiecewisePolynomial:
     p_return = np.array([p_place[0] - 0.4, p_place[1], p_place[2]])
     return PiecewisePolynomial.FirstOrderHold(
         [0.0, 2.0, 4.0, 7.0, 9.0, 10.0, 11.0, 13.0, 15.0],
-        np.column_stack([p_above, p_above, p_grasp, p_grasp, p_lift, p_rotate, p_rotate, p_place, p_return]),
+        np.column_stack(
+            [
+                p_above,
+                p_above,
+                p_grasp,
+                p_grasp,
+                p_lift,
+                p_rotate,
+                p_rotate,
+                p_place,
+                p_return,
+            ]
+        ),
     )
 
 
@@ -225,6 +246,7 @@ def make_pick_orientation_trajectory() -> PiecewiseQuaternionSlerp:
     traj.Append(11.0, R_place)
     traj.Append(15.0, R_place)
     return traj
+
 
 # ---------------------------------------------------------------------------
 # Master dispatch: end-effector pose over the full 55 s task.

@@ -1,7 +1,7 @@
 [project]
 name = "door-opening"
 version = "0.1.0"
-requires-python = ">=3.10"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "numpy",
     "drake",
@@ -9,3 +9,29 @@ dependencies = [
     "graphviz",
     "mcubes",
 ]
+
+
+[dependency-groups]
+dev = [
+    "ruff>=0.7",
+    "pyright",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "I",
+    "B",
+    "UP",
+    "NPY",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
