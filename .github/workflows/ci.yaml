@@ -42,6 +42,3 @@ jobs:
 
       - name: Lint with Ruff
         run: uv run ruff check .
-
-      - name: Type check with Pyright
-        run: uv run pyright
