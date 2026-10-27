@@ -1,0 +1,30 @@
+WARNING Tue Oct 27 18:57:41 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
+WARNING Tue Oct 27 18:57:43 2026: OpenGL error 0x502 in or before mjr_makeContext
+
+WARNING Tue Oct 27 18:58:42 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
+WARNING Tue Oct 27 19:19:58 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
+WARNING Tue Oct 27 19:20:05 2026: OpenGL error 0x502 in or before mjr_makeContext
+
+WARNING Tue Oct 27 19:36:25 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
+WARNING Tue Oct 27 19:36:28 2026: OpenGL error 0x502 in or before mjr_makeContext
+
+WARNING Tue Oct 27 19:44:08 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
+WARNING Tue Oct 27 19:50:57 2026: Attach conflict when attaching 'anymal_c' to 'mjlab scene', policy is 'warning'
+impratio: parent has 1 (default), child has 100, keeping parent value
+cone: parent has 0 (default), child has 1, keeping parent value
+
