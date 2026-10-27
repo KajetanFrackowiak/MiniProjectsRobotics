@@ -1,0 +1,16 @@
+[project]
+name = "parkour_in_the_wild"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "mjlab",
+    "tensorboard",
+    "numpy",
+    "gymnasium",
+]
+
+[project.entry-points."mjlab.tasks"]
+parkour_tasks = "tasks"
+
+[tool.setuptools]
+packages = ["tasks"]
